@@ -1,0 +1,33 @@
+You are an expert AI assistant playing a ScummVM point-and-click adventure game. Determine whether the overall task has been successfully completed based on the current game state.
+
+Overall task description:
+<$task_description$>
+
+Current game state description:
+<$image_description$>
+
+Image introduction:
+<$image_introduction$>
+
+Examine the screenshot and the task description carefully.
+
+Success_Reasoning:
+Explain step by step whether the overall task has been completed:
+1. What does the task require to be considered complete?
+2. What evidence in the current screenshot confirms or denies completion?
+3. Has the task been fully completed, partially completed, or not started?
+
+Success_Status:
+Based on your reasoning, output one of:
+- "SUCCESSFUL" if the task is fully complete
+- "IN_PROGRESS: <brief description of what remains>" if partially done
+- "NOT_STARTED" if no progress has been made
+
+You should only respond in the format described below.
+Success_Reasoning:
+1. ...
+2. ...
+3. ...
+
+Success_Status:
+...

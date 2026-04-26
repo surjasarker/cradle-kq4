@@ -1,0 +1,21 @@
+{
+    "task_description": "",
+    "subtask_description": "",
+    "image_description": "",
+    "skill_library": "",
+    "previous_action": "",
+    "key_reason_of_last_action": "",
+    "previous_self_reflection_reasoning": "",
+    "previous_summarization": "",
+    "success_detection": "",
+    "window_size": "",
+    "window_width": "",
+    "window_height": "",
+    "image_introduction": [
+        {
+            "introduction": "This is the current game screenshot. Look at it carefully to determine where to click.",
+            "path": "",
+            "assistant": ""
+        }
+    ]
+}

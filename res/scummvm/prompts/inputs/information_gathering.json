@@ -1,0 +1,16 @@
+{
+    "gather_information_configurations": {
+        "frame_extractor": false,
+        "llm_description": true,
+        "object_detector": false,
+        "icon_replacer": false
+    },
+    "task_description": "",
+    "image_introduction": [
+        {
+            "introduction": "This is the current game screenshot.",
+            "path": "",
+            "assistant": ""
+        }
+    ]
+}

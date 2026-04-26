@@ -1,0 +1,6 @@
+{
+    "_comment": "Qwen VLM local config for vLLM or Ollama. No API key needed. Start server first: vllm serve Qwen/Qwen2-VL-7B-Instruct --port 8000",
+    "key_var": "EMPTY",
+    "comp_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "api_base": "http://localhost:8000/v1"
+}

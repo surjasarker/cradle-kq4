@@ -1,0 +1,87 @@
+{
+    "env_name": "Kings Quest IV - The Perils of Love",
+    "sub_path": "scummvm",
+    "env_short_name": "scummvm",
+    "is_game": true,
+    "shared_runner": "scummvm",
+    "scummvm_game_id": "sci:kq4sci",
+    "scummvm_executable": "/home/surja/Downloads/fomo_project/scummvm/bin/scummvm-linux/scummvm",
+    "scummvm_game_path": "/home/surja/Downloads/fomo_project/scummvm/games/KQ4",
+    "scummvm_debug_log": "/tmp/scummvm_debug.log",
+    "skill_registry_name": "cradle.environment.scummvm.skill_registry.ScummVMSkillRegistry",
+    "ui_control_name": "cradle.environment.scummvm.ui_control.ScummVMUIControl",
+    "task_description_list": [
+        {
+            "id": 1,
+            "task_description": "Play Kings Quest 4 and explore the game world. Collect items, talk to NPCs, and solve simple puzzles to progress through the story.",
+            "sub_task_description_list": [
+                "Look around and get familiar with the game world",
+                "Find and collect at least one item",
+                "Talk to an NPC to learn about the world",
+                "Solve a simple puzzle",
+                "Progress to the next area"
+            ]
+        },
+        {
+            "id": 2,
+            "task_description": "Find a specific item in the game world - the healing potion.",
+            "sub_task_description_list": [
+                "Explore the available locations",
+                "Check objects for clues",
+                "Find the potion or a clue to its location",
+                "Use the potion if needed"
+            ]
+        }
+    ],
+    "skill_configs": {
+        "skill_mode": "Basic",
+        "skill_from_default": false,
+        "skill_names_basic": [
+            "move_to",
+            "type_command",
+            "quicksave",
+            "quickload"
+        ],
+        "skill_names_allow": [],
+        "skill_names_deny": [],
+        "skill_names_others": {
+            "skill_names_movement": [],
+            "skill_names_map": [],
+            "skill_names_trade": []
+        },
+        "skill_num": 4,
+        "skill_retrieval": false,
+        "registered_skills": null
+    },
+    "planner_params": {
+        "__check_list__": [
+            "action_planning",
+            "information_gathering",
+            "self_reflection",
+            "task_inference",
+            "success_detection"
+        ],
+        "prompt_paths": {
+            "inputs": {
+                "action_planning": "./res/scummvm/prompts/inputs/action_planning.json",
+                "information_gathering": "./res/scummvm/prompts/inputs/information_gathering.json",
+                "information_text_gathering": "./res/scummvm/prompts/inputs/information_text_gathering.json",
+                "self_reflection": "./res/scummvm/prompts/inputs/self_reflection.json",
+                "task_inference": "./res/scummvm/prompts/inputs/task_inference.json",
+                "success_detection": "./res/scummvm/prompts/inputs/success_detection.json"
+            },
+            "templates": {
+                "action_planning": "./res/scummvm/prompts/templates/action_planning.prompt",
+                "information_gathering": "./res/scummvm/prompts/templates/information_gathering.prompt",
+                "information_text_gathering": "./res/scummvm/prompts/templates/information_text_gathering.prompt",
+                "self_reflection": "./res/scummvm/prompts/templates/self_reflection.prompt",
+                "task_inference": "./res/scummvm/prompts/templates/task_inference.prompt",
+                "success_detection": "./res/scummvm/prompts/templates/success_detection.prompt"
+            }
+        }
+    },
+    "provider_configs": {
+        "use_sam": true,
+        "use_gd": false
+    }
+}

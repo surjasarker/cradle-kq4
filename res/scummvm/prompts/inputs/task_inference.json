@@ -1,0 +1,18 @@
+{
+    "task_description": "",
+    "subtask_description": "",
+    "subtask_reasoning": "",
+    "previous_action": "",
+    "executing_action_error": "",
+    "previous_reasoning": "",
+    "self_reflection_reasoning": "",
+    "success_detection": "",
+    "previous_summarization": "",
+    "image_introduction": [
+        {
+            "introduction": "This is the current game screenshot.",
+            "path": "",
+            "assistant": ""
+        }
+    ]
+}

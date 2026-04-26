@@ -1,0 +1,61 @@
+You are an expert AI assistant playing a ScummVM point-and-click adventure game. Your job is to summarise recent progress and propose the most appropriate next subtask to work on.
+
+Overall task description:
+<$task_description$>
+
+Previous subtask:
+<$subtask_description$>
+
+Previous reasoning for the subtask:
+<$subtask_reasoning$>
+
+Image introduction:
+<$image_introduction$>
+
+Last executed action:
+<$previous_action$>
+
+Error report for the last action:
+<$executing_action_error$>
+
+Key reasoning for the last action:
+<$previous_reasoning$>
+
+Self-reflection on the last action:
+<$self_reflection_reasoning$>
+
+Overall task success status:
+<$success_detection$>
+
+Summary of history before this step:
+<$previous_summarization$>
+
+History_summary:
+Summarise what has happened so far in the game session, focusing on the last step. Be precise and concrete:
+1. What has been accomplished in the overall task? What key items were found, NPCs talked to, areas explored, or puzzles solved?
+2. What did the last action accomplish (or fail to accomplish)?
+3. What subtasks remain unfinished?
+4. What important game information has been learned (locations, items, NPC names, puzzle hints)?
+
+Subtask_reasoning:
+Propose the best next subtask to make progress on the overall task:
+1. What are the remaining steps needed to complete the overall task?
+2. What is the current progress based on the history summary?
+3. Is the previous subtask complete or still relevant? Should it be continued or replaced?
+4. What is the most actionable next step given the current game state?
+5. State the new subtask in one clear, concrete sentence.
+
+You should only respond in the format described below.
+
+History_summary:
+...
+
+Subtask_reasoning:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+
+Subtask_description:
+The current subtask is ...

@@ -1,0 +1,6 @@
+{
+    "_comment": "Qwen2-VL running on Snellius via SSH tunnel. Start vLLM on Snellius then tunnel: ssh -L 8000:NODENAME:8000 user@snellius.surf.nl -N",
+    "key_var": "EMPTY",
+    "comp_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "api_base": "http://localhost:8000/v1"
+}

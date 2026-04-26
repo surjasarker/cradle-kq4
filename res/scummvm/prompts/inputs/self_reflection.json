@@ -1,0 +1,21 @@
+{
+    "task_description": "",
+    "previous_action_call": "",
+    "action_code": "",
+    "executing_action_error": "",
+    "key_reason_of_last_action": "",
+    "skill_library": "",
+    "success_detection": "",
+    "image_introduction": [
+        {
+            "introduction": "This is the screenshot before the last action.",
+            "path": "",
+            "assistant": ""
+        },
+        {
+            "introduction": "This is the screenshot after the last action.",
+            "path": "",
+            "assistant": ""
+        }
+    ]
+}

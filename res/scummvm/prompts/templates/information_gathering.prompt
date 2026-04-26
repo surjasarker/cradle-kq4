@@ -1,0 +1,42 @@
+You are an AI assistant helping to play King's Quest IV, a text-parser adventure game in ScummVM. Analyse the screenshot carefully.
+
+The player character is Rosella — a young woman in a red dress with blonde hair. She is the character you see moving around the screen.
+
+Overall task:
+<$task_description$>
+
+Image introduction:
+<$image_introduction$>
+
+Please provide the following information about what you see.
+
+Image_Description:
+Describe the scene: location/setting, atmosphere, time of day if apparent, any text visible on screen.
+
+Game_State:
+One or two sentences: where is the player character, what is happening, what appears to be the immediate goal?
+
+Interactive_Objects:
+List every visible object, character, or exit that the player could interact with. For each, give:
+- A SHORT NOUN NAME suitable for use in a parser command (e.g. "door", "rock", "fisherman", "chest", "path")
+- Approximate screen position as pixel coordinates (x, y) from the top-left of the game window
+Format: "noun_name: (x, y)"
+
+Suggested_Commands:
+List 3-5 specific parser commands the agent could try right now, using this format:
+- type_command(command="verb noun") to interact, e.g. type_command(command="look at rock")
+- move_to(x=X, y=Y) to walk somewhere visible
+
+You should only respond in the format described above. DO NOT change the section titles.
+
+Image_Description:
+...
+
+Game_State:
+...
+
+Interactive_Objects:
+...
+
+Suggested_Commands:
+...
