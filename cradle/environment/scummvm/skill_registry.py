@@ -11,7 +11,7 @@ from cradle.environment import SkillRegistry
 from cradle.environment import Skill
 from cradle.utils.singleton import Singleton
 
-from cradle.environment.scummvm.atomic_skills.kq4_skills import MoveTo, TypeCommand
+from cradle.environment.scummvm.atomic_skills.kq4_skills import MoveTo, MoveDirection, MoveSequence, TypeCommand
 from cradle.environment.scummvm.atomic_skills.game_state_skills import Quicksave, Quickload
 
 config = Config()
@@ -19,6 +19,8 @@ logger = Logger()
 
 KQ4_SKILLS = {
     "move_to": MoveTo,
+    "move_direction": MoveDirection,
+    "move_sequence": MoveSequence,
     "type_command": TypeCommand,
     "quicksave": Quicksave,
     "quickload": Quickload,

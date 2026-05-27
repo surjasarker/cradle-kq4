@@ -47,7 +47,90 @@ class MoveTo:
         _xdotool("mousemove", ax, ay)
         time.sleep(0.1)
         _xdotool("click", "1")
-        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME * 2)
+        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME)
+
+
+_DIRECTION_KEYS = {
+    "north": "Up",  "up": "Up",
+    "south": "Down", "down": "Down",
+    "east":  "Right", "right": "Right",
+    "west":  "Left",  "left": "Left",
+}
+
+
+class MoveDirection:
+    """Move the character by holding an arrow key for a given duration."""
+
+    def __init__(self, registry):
+        self.registry = registry
+        self.name = "move_direction"
+
+    @staticmethod
+    def execute(direction: str, duration: float):
+        """Hold an arrow key to walk in a direction.
+
+        Args:
+            direction: One of north, south, east, west (or up/down/left/right)
+            duration:  Seconds to walk in that direction (0.1 to 5.0)
+        """
+        key = _DIRECTION_KEYS.get(direction.lower())
+        if key is None:
+            logger.write(f"move_direction: unknown direction '{direction}', skipping")
+            return
+        duration = max(0.1, min(float(duration), 5.0))
+        logger.write(f"move_direction: {direction} ({key}) for {duration}s")
+        _xdotool("key", key)   # press once to start moving
+        time.sleep(duration)
+        _xdotool("key", key)   # press again to stop
+        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME)
+
+
+class MoveSequence:
+    """Execute a planned sequence of directional moves in one action."""
+
+    def __init__(self, registry):
+        self.registry = registry
+        self.name = "move_sequence"
+
+    @staticmethod
+    def execute(moves: str):
+        """Execute a sequence of directional moves.
+
+        Args:
+            moves: Comma-separated "direction duration" pairs,
+                   e.g. "east 1.0, north 2.0, east 0.5"
+        """
+        steps = []
+        for part in moves.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            tokens = part.split()
+            if len(tokens) >= 2:
+                direction = tokens[0].lower()
+                try:
+                    duration = float(tokens[1].rstrip("s"))
+                    steps.append((direction, duration))
+                except ValueError:
+                    logger.write(f"move_sequence: bad duration in '{part}', skipping")
+
+        if not steps:
+            logger.write("move_sequence: no valid steps parsed")
+            return
+
+        for direction, duration in steps:
+            key = _DIRECTION_KEYS.get(direction)
+            if key is None:
+                logger.write(f"move_sequence: unknown direction '{direction}', skipping")
+                continue
+            duration = max(0.1, min(duration, 5.0))
+            logger.write(f"move_sequence step: {direction} ({key}) for {duration}s")
+            _xdotool("key", key)
+            time.sleep(duration)
+            _xdotool("key", key)
+            time.sleep(0.2)
+
+        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME)
 
 
 class TypeCommand:
@@ -74,4 +157,4 @@ class TypeCommand:
         # Press Enter to execute the command
         io_env.key_press('return')
         # Wait long enough for the game to display its full text response
-        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME * 3)
+        post_skill_wait(config.DEFAULT_POST_ACTION_WAIT_TIME * 2)

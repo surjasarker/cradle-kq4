@@ -26,7 +26,7 @@ echo "ssh -L 8000:$SLURMD_NODENAME:8000 $USER@snellius.surf.nl -N" >> vllm_node.
 cat vllm_node.txt
 
 python -m vllm.entrypoints.openai.api_server \
-    --model Qwen/Qwen2-VL-7B-Instruct \
+    --model Qwen/Qwen2.5-VL-7B-Instruct \
     --port 8000 \
     --host 0.0.0.0 \
-    --max-model-len 4096
+    --max-model-len 8192

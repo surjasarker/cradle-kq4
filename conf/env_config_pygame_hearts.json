@@ -1,0 +1,60 @@
+{
+    "env_name": "I'll Cop Your Heart",
+    "sub_path": "pygame_hearts",
+    "env_short_name": "pygame_hearts",
+    "is_game": true,
+    "shared_runner": "pygame_hearts",
+    "max_turn_count": 1000,
+    "post_action_delay": 0.5,
+    "min_turn_time": 1.0,
+    "game_path": "/home/surja/Downloads/fomo_project/pyweek-31",
+    "game_window": {
+        "left": 0,
+        "top": 0,
+        "width": 600,
+        "height": 600
+    },
+    "skill_registry_name": "cradle.environment.pygame_hearts.skill_registry.PyGameHeartsSkillRegistry",
+    "ui_control_name": "cradle.environment.pygame_hearts.ui_control.PyGameHeartsUIControl",
+    "task_description_list": [
+        {
+            "id": 1,
+            "task_description": "Play I'll Cop Your Heart. Each turn a heart lights up red in one of four directions (up, down, left, right). Press the matching arrow key before the timer runs out. Avoid wrong presses — you only have 3 lives.",
+            "sub_task_description_list": [
+                "Identify the red (active) heart",
+                "Press the matching arrow key",
+                "Maximise score without losing all 3 lives"
+            ]
+        }
+    ],
+    "skill_configs": {
+        "skill_mode": "Basic",
+        "skill_from_default": false,
+        "skill_names_basic": ["press_key", "press_start"],
+        "skill_names_allow": [],
+        "skill_names_deny": [],
+        "skill_names_others": {
+            "skill_names_movement": [],
+            "skill_names_map": [],
+            "skill_names_trade": []
+        },
+        "skill_num": 2,
+        "skill_retrieval": false,
+        "registered_skills": null
+    },
+    "planner_params": {
+        "__check_list__": ["action_planning"],
+        "prompt_paths": {
+            "inputs": {
+                "action_planning": "./res/scummvm/prompts/inputs/action_planning.json"
+            },
+            "templates": {
+                "action_planning": "./res/scummvm/prompts/templates/action_planning.prompt"
+            }
+        }
+    },
+    "provider_configs": {
+        "use_sam": false,
+        "use_gd": false
+    }
+}

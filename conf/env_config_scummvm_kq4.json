@@ -8,6 +8,13 @@
     "scummvm_executable": "/home/surja/Downloads/fomo_project/scummvm/bin/scummvm-linux/scummvm",
     "scummvm_game_path": "/home/surja/Downloads/fomo_project/scummvm/games/KQ4",
     "scummvm_debug_log": "/tmp/scummvm_debug.log",
+    "movement_mode": "sequence",
+    "game_window": {
+        "left": 640,
+        "top": 360,
+        "width": 635,
+        "height": 455
+    },
     "skill_registry_name": "cradle.environment.scummvm.skill_registry.ScummVMSkillRegistry",
     "ui_control_name": "cradle.environment.scummvm.ui_control.ScummVMUIControl",
     "task_description_list": [

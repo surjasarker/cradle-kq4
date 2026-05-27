@@ -19,12 +19,12 @@ export DISPLAY=${DISPLAY:-:0}
 export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 
 echo "Starting ScummVM..."
-# --debugflags=Room -d 1 logs room transitions to scummvm_debug.log so the
-# agent can key its action history per room and avoid repeating moves.
-"$SCUMMVM" --path="$GAME_PATH" \
-  --debugflags=Room -d 1 \
-  "$GAME_ID" \
-  2>/tmp/scummvm_debug.log &
+# Launch ScummVM through a PTY wrapper so debugC(Room,...) output is
+# line-buffered and appears in the log immediately (not buffered until exit).
+python "$SCRIPT_DIR/scummvm_pty_wrapper.py" /tmp/scummvm_debug.log \
+  "$SCUMMVM" --path="$GAME_PATH" \
+  --debugflags=Room -d 2 \
+  "$GAME_ID" &
 SCUMMVM_PID=$!
 
 echo "Waiting for ScummVM window to appear..."
@@ -32,8 +32,7 @@ sleep 4
 
 echo "Starting Cradle agent..."
 cd "$SCRIPT_DIR"
-conda activate cradle
-python runner.py \
+/home/surja/anaconda3/envs/cradle/bin/python runner.py \
   --llmProviderConfig ./conf/qwen_config.json \
   --embedProviderConfig ./conf/qwen_config.json \
   --envConfig ./conf/env_config_scummvm_kq4.json
