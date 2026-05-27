@@ -2,6 +2,7 @@
 
 A modular harness for evaluating vision-language models (VLMs) on three games of increasing complexity. Built on the [Cradle](https://arxiv.org/abs/2403.03186) framework.
 
+
 | Game | Task | Skills |
 |---|---|---|
 | **I'll Cop Your Heart** | Identify the red heart (up/down/left/right) and press the matching arrow key | `press_key`, `press_start` |
