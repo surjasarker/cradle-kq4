@@ -1,7 +1,0 @@
-{
-    "_comment": "GLM-4.1V-9B-Thinking (vision) running on Snellius via SSH tunnel. Start vLLM on Snellius then tunnel: ssh -L 8000:NODENAME:8000 user@snellius.surf.nl -N",
-    "key_var": "EMPTY",
-    "comp_model": "THUDM/GLM-4.1V-9B-Thinking",
-    "api_base": "http://localhost:8000/v1"
-}
-

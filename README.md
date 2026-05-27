@@ -1,225 +1,231 @@
-# Cradle KQ4 Agent
+# VLM Game Agent — Cradle Harness
 
-A VLM-based agent that plays **King's Quest IV: The Perils of Rosella** via ScummVM, built on the [Cradle](https://github.com/BAAI-Agents/Cradle) framework.
+A modular harness for evaluating vision-language models (VLMs) on three games of increasing complexity. Built on the [Cradle](https://arxiv.org/abs/2403.03186) framework.
 
-The agent perceives the game through screenshots, plans actions using a vision-language model (Qwen2-VL), and controls the game via mouse clicks and typed parser commands.
-
----
-
-## Requirements
-
-### Local machine
-- Linux with **GNOME on Wayland** (XWayland must be running)
-- `conda` (Anaconda or Miniconda)
-- `xdotool` — install with `sudo apt install xdotool`
-- `gnome-screenshot` — usually pre-installed
-- ScummVM binary (see below)
-- King's Quest IV game files (SCI version)
-
-### Snellius HPC (for the VLM)
-- Access to Snellius (`snellius.surf.nl`)
-- GPU partition with at least one A100/H100 (≥ 24 GB VRAM for 7B model)
+| Game | Task | Skills |
+|---|---|---|
+| **I'll Cop Your Heart** | Identify the red heart (up/down/left/right) and press the matching arrow key | `press_key`, `press_start` |
+| **Simon Says** | Watch a growing colour sequence and reproduce it by clicking the correct buttons | `click` |
+| **King's Quest IV** | Navigate a point-and-click adventure, solve multi-step puzzles | `move_to`, `type_command` |
 
 ---
 
-## 1. Set up ScummVM
-
-Download the ScummVM Linux binary and place your KQ4 game files:
+## Architecture
 
 ```
-scummvm/
-├── bin/scummvm-linux/scummvm   ← ScummVM executable
-└── games/KQ4/                  ← KQ4 SCI game files (*.scr, resource.*, etc.)
+Cradle/
+├── runner.py                        # Main entry point (all three games)
+├── Game.py                          # Simon Says tkinter game
+├── launch_pyhearts.sh               # Launch I'll Cop Your Heart agent
+├── launch_simon_says.sh             # Launch Simon Says game + agent
+├── launch_kq4.sh                    # Launch KQ4 (ScummVM) + agent
+├── conf/
+│   ├── qwen_config.json             # VLM endpoint (vLLM on Snellius)
+│   ├── env_config_pygame_hearts.json
+│   ├── env_config_simon_says.json
+│   └── env_config_scummvm_kq4.json
+├── cradle/
+│   ├── runner/
+│   │   ├── pygame_hearts_runner.py  # Hearts: single-shot VLM → key press
+│   │   ├── simon_says_runner.py     # Simon Says: sequence VLM pipeline
+│   │   └── scummvm_runner.py        # KQ4: full planning pipeline
+│   └── environment/
+│       ├── pygame_hearts/           # Skills: press_key, press_start
+│       ├── simon_says/              # Skill: click(color)
+│       └── scummvm/                 # Skills: move_to, type_command
+├── res/
+│   ├── simon_says/prompts/          # Prompt templates for Simon Says
+│   └── scummvm/prompts/             # Prompt templates for KQ4
+└── slurm/                           # HPC job scripts for Snellius vLLM
 ```
 
-Edit `launch_kq4.sh` to point to your paths:
-
-```bash
-SCUMMVM=/path/to/scummvm/bin/scummvm-linux/scummvm
-GAME_PATH=/path/to/scummvm/games/KQ4
+### Per-turn loop (all games)
 ```
-
-Verify ScummVM can launch the game manually before running the agent:
-
-```bash
-/path/to/scummvm --path=/path/to/games/KQ4 sci:kq4sci
+Screenshot → base64 encode → VLM prompt → parse action → execute via xdotool/pyautogui
 ```
 
 ---
 
-## 2. Set up the local Cradle environment
+## Setup
+
+### 1. Conda environment
 
 ```bash
-conda create -n cradle python=3.11 -y
+conda create -n cradle python=3.11
 conda activate cradle
 pip install -r requirements.txt
 ```
 
-> **Note:** On GNOME Wayland, `pyautogui` may fail to connect to X11 on import.
-> The `runner.py` script handles this automatically by reading the XWayland auth
-> cookie from `/run/user/1000/.mutter-Xwaylandauth.*` — no manual fix needed.
-
----
-
-## 3. Set up vLLM on Snellius
-
-### 3a. Install (one time only)
-
-Copy the slurm scripts to Snellius and run the installer:
-
+System packages needed:
 ```bash
-scp slurm/install_vllm.sh scur0507@snellius.surf.nl:~/
-ssh scur0507@snellius.surf.nl
-sbatch install_vllm.sh
+sudo apt install xdotool wmctrl gnome-screenshot
 ```
 
-This creates a `vllm_env` conda environment and downloads `Qwen/Qwen2-VL-7B-Instruct` to scratch storage. Takes ~15 minutes. Check progress with `squeue -u $USER`.
+### 2. VLM server on Snellius (HPC)
 
-### 3b. Start the vLLM server (each session)
-
+Install vLLM once:
 ```bash
-ssh scur0507@snellius.surf.nl
+sbatch slurm/install_vllm.sh
+```
+
+Start the server before each run:
+```bash
 sbatch slurm/start_vllm_server.sh
-```
-
-Wait for the job to start (`squeue -u $USER`), then check which node it landed on:
-
-```bash
+# Check the output — it prints the node name and the exact ssh tunnel command
 cat vllm_node.txt
 ```
 
-This file also prints the exact SSH tunnel command you need, e.g.:
-
-```
-ssh -L 8000:gcn24:8000 scur0507@snellius.surf.nl -N
-```
-
-### 3c. Open the SSH tunnel (each session, local machine)
-
-Open a **separate terminal** and run the tunnel command from `vllm_node.txt`:
-
+Open the SSH tunnel (keep this terminal open):
 ```bash
-ssh -L 8000:gcn24:8000 scur0507@snellius.surf.nl -N
+ssh -L 8000:<NODE>:8000 scur0507@snellius.surf.nl -N
 ```
 
-Leave this terminal open. The agent talks to the VLM via `http://localhost:8000`.
-
-Verify the tunnel is working:
-
-```bash
-curl http://localhost:8000/v1/models
-```
-
-You should see `Qwen/Qwen2-VL-7B-Instruct` in the response.
-
----
-
-## 4. Run the agent
-
-With the SSH tunnel active, run from the `Cradle/` directory:
-
-```bash
-conda activate cradle
-./launch_kq4.sh
-```
-
-This script:
-1. Launches ScummVM with KQ4 and room-transition debug logging
-2. Waits 4 seconds for the window to appear
-3. Starts the Cradle agent
-
-Or run each step manually:
-
-```bash
-# Terminal 1 — launch ScummVM
-/path/to/scummvm --path=/path/to/games/KQ4 --debugflags=Room -d 1 sci:kq4sci 2>/tmp/scummvm_debug.log &
-
-# Terminal 2 — launch agent
-conda activate cradle
-python runner.py \
-  --llmProviderConfig ./conf/qwen_config.json \
-  --embedProviderConfig ./conf/qwen_config.json \
-  --envConfig ./conf/env_config_scummvm_kq4.json
-```
-
----
-
-## 5. Configuration
-
-### VLM / LLM provider — `conf/qwen_config.json`
-
+Switch model by editing `conf/qwen_config.json`:
 ```json
 {
-    "comp_model": "Qwen/Qwen2-VL-7B-Instruct",
+    "comp_model": "THUDM/GLM-4.1V-9B-Thinking",
     "api_base": "http://localhost:8000/v1"
 }
 ```
-
-Change `comp_model` to swap models (e.g. `Qwen/Qwen2.5-VL-7B-Instruct`). The model name must match what vLLM loaded on Snellius.
-
-### Game / environment — `conf/env_config_scummvm_kq4.json`
-
-| Key | Purpose |
-|-----|---------|
-| `env_name` | Window title substring used to find the game window |
-| `scummvm_executable` | Path to ScummVM binary |
-| `scummvm_game_path` | Path to KQ4 game files |
-| `scummvm_game_id` | ScummVM game ID (`sci:kq4sci`) |
-| `scummvm_debug_log` | Path where ScummVM writes room debug log (`/tmp/scummvm_debug.log`) |
-
-### Switching to a different/better model
-
-On Snellius, edit `slurm/start_vllm_server.sh` and change the `--model` line:
-
-```bash
-python -m vllm.entrypoints.openai.api_server \
-    --model Qwen/Qwen2.5-VL-7B-Instruct \   # ← change here
-    --port 8000 \
-    --host 0.0.0.0 \
-    --max-model-len 4096
-```
-
-Then update `conf/qwen_config.json` to match. Larger models (72B) need multiple GPUs — change the SBATCH header accordingly (`--gres=gpu:4`).
+And update `--model` in `slurm/start_vllm_server.sh` to match.
 
 ---
 
-## 6. How it works
+## Running the games
 
-Each turn the agent:
+All three scripts assume `conda activate cradle` is already active.
 
-1. Takes a screenshot of the game window
-2. Runs **information gathering** — asks the VLM to describe the scene
-3. Runs **action planning** — asks the VLM to choose one action:
-   - `type_command(command="verb noun")` — types a parser command into the game
-   - `move_to(x=X, y=Y)` — clicks a pixel to walk the character there
-4. Executes the action via `xdotool` (click) or keyboard input
-5. Stores the action in a per-room and global history to prevent repeating
+### I'll Cop Your Heart
 
-The agent character is **Rosella** — the woman in the red dress with blonde hair.
+Start the game first (needs the `pyhearts` conda env):
+```bash
+conda activate pyhearts
+cd /path/to/pyweek-31
+python run_game.py
+```
+
+Then in a second terminal (SSH tunnel must be active):
+```bash
+conda activate cradle
+cd Cradle
+./launch_pyhearts.sh
+```
+
+### Simon Says
+
+```bash
+conda activate cradle
+cd Cradle
+./launch_simon_says.sh
+# Starts Game.py automatically, then launches the agent
+```
+
+### King's Quest IV
+
+Requires ScummVM and the KQ4 game files. Edit the paths at the top of `launch_kq4.sh` to match your installation, then:
+
+```bash
+conda activate cradle
+cd Cradle
+./launch_kq4.sh
+# Starts ScummVM via PTY wrapper, waits 4 s, then launches the agent
+```
 
 ---
 
-## 7. Troubleshooting
+## How each agent works
 
-**Screenshot is black**
-ScummVM uses GPU rendering not visible to X11 screenshot tools. The agent uses `gnome-screenshot` which goes through the GNOME compositor. Make sure you are running a GNOME Wayland session.
+### I'll Cop Your Heart (`pygame_hearts_runner.py`)
+Each turn:
+1. Screenshot via `xwd` → lossless PNG
+2. Single VLM call with a structured chain-of-thought prompt:
+   - Step 1: menu or gameplay?
+   - Step 2: colour of each heart (above / below / left / right)?
+   - Step 3: which is red?
+   - Step 4: emit `press_key(key=...)` or `press_start()`
+3. Parse action from response, execute via `xdotool`
 
-**`Cannot connect to display :0`**
-The XWayland auth cookie isn't in `~/.Xauthority`. This is handled automatically in `runner.py` — if it still fails, run:
-```bash
-xauth add :0 . $(xauth -f /run/user/1000/.mutter-Xwaylandauth.* list | awk '{print $3}' | head -1)
+### Simon Says (`simon_says_runner.py`)
+Each turn:
+1. Poll `screenshots/game_state.txt` — wait until state is `your_turn`
+2. Collect all `level_N_sequence.png` files Game.py wrote (one per sequence step)
+3. Crop each to the button area and encode as JPEG
+4. Single VLM call with all N images: "identify the highlighted button in each screenshot, output N `click(color=...)` calls in order"
+5. Validate response (exactly N clicks, valid colours), retry up to 2× if malformed
+6. Execute clicks via live pixel scan (`cv2` connected-components on exact button RGB)
+7. On game over: log failure to `failures.txt`, auto-restart via START button click
+
+### King's Quest IV (`scummvm_runner.py`)
+Each turn (two-screenshot design):
+1. Screenshot of any text overlay from the previous action
+2. Dismiss overlay, wait 1.5 s, screenshot of the scene
+3. **Information gathering** — VLM describes the current scene
+4. **Action planning** — VLM selects `move_to(x, y)` or `type_command(word)` given scene, task, and forbidden-action list
+5. Execute via `xdotool`
+
+Room transitions are tracked via the ScummVM debug log; a per-room action history prevents the agent from repeating failed actions in the same room.
+
+---
+
+## Configuration
+
+### Changing the VLM model
+
+Edit `conf/qwen_config.json` and update `slurm/start_vllm_server.sh` to use the same HuggingFace model ID. No agent code changes needed.
+
+### Tuning turn budget and timing
+
+Each environment config (`conf/env_config_*.json`) exposes:
+```json
+{
+    "max_turn_count": 1000,
+    "post_action_delay": 0.5,
+    "min_turn_time": 1.0
+}
 ```
 
-**`OSError: Cannot find the game window`**
-ScummVM isn't running or the window didn't appear yet. Start ScummVM first and wait a few seconds before starting the agent.
+### Simon Says button calibration
 
-**`APIConnectionError` / tunnel not working**
-- Check the SSH tunnel is running in another terminal
-- Verify the node name in `vllm_node.txt` is correct (the job may have moved to a different node if resubmitted)
-- Test: `curl http://localhost:8000/v1/models`
+If the click skill misses buttons after moving the game window, run the calibration script:
+```bash
+python test_simon_says_skills.py
+```
+This writes updated pixel coordinates to `conf/simon_says_buttons.json`.
 
-**Cursor clicks outside game / in wrong position**
-The agent auto-detects the game window position on startup. If ScummVM is moved or resized after the agent starts, restart the agent.
+---
 
-**Agent repeats the same action**
-The forbidden-action list covers the last 20 actions globally and all actions in the current room. If the agent still repeats, check that room detection is working by verifying `/tmp/scummvm_debug.log` is being written to.
+## Output
+
+Each run creates a timestamped folder under `runs/`:
+```
+runs/<timestamp>/
+├── screen_*.png              # Per-turn screenshots (lossless PNG)
+├── sequence_screenshots/     # Exact images sent to VLM (Simon Says)
+├── failures.txt              # Per-game failure log (Simon Says)
+├── video.mp4                 # Full-run video (if enabled)
+└── *.log                     # Full VLM request/response logs
+```
+
+Use `log_processor.py` to convert raw logs to readable markdown:
+```bash
+python log_processor.py runs/<timestamp>/
+```
+
+---
+
+## Troubleshooting
+
+**Black screenshots / `xwd` fails**
+```bash
+python check_window.py   # Draws a red border around the detected game region
+export DISPLAY=:0
+export XAUTHORITY=$(ls /run/user/1000/.mutter-Xwaylandauth.* 2>/dev/null | head -1)
+```
+
+**VLM returns a connection error**
+- Verify the SSH tunnel is alive: `curl http://localhost:8000/v1/models`
+- Check the SLURM job is still running: `squeue -u $USER` on Snellius
+
+**Simon Says clicks the wrong button**
+- Re-run the button calibration script (see above)
+- Make sure no other window with matching red/blue/yellow/green pixels overlaps the game window

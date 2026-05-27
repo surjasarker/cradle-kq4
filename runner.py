@@ -53,7 +53,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser("Cradle Agent Runner")
     parser.add_argument("--llmProviderConfig", type=str, default="./conf/openai_config.json", help="The path to the LLM provider config file")
     parser.add_argument("--embedProviderConfig", type=str, default="./conf/openai_config.json", help="The path to the embedding model provider config file")
-    parser.add_argument("--envConfig", type=str, default="./conf/env_config_outlook.json", help="The path to the environment config file")
+    parser.add_argument("--envConfig", type=str, default="./conf/env_config_scummvm_kq4.json", help="The path to the environment config file")
     return parser
 
 
