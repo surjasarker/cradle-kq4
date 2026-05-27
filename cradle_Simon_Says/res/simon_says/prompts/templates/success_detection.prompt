@@ -1,0 +1,12 @@
+Determine whether the Simon Says task is complete.
+
+Task: <$task_description$>
+Last action: <$previous_action$>
+
+<$image_introduction$>
+
+Success:
+[True or False — True only if the on-screen state shows the task has been satisfied (e.g. reached the target level).]
+
+Reasoning:
+[One sentence]

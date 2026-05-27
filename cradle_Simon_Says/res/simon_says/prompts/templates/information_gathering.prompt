@@ -1,0 +1,25 @@
+You are analysing a Simon Says game screenshot. The game has four colored buttons (red top-left, blue top-right, yellow bottom-left, green bottom-right). One button may currently be lit/highlighted, indicating part of a Simon Says sequence.
+
+Overall task:
+<$task_description$>
+
+Image introduction:
+<$image_introduction$>
+
+Image_Description:
+Describe what you see: which button (if any) is lit, the current level, and any visible UI text.
+
+Game_State:
+One sentence: what is the game doing right now (showing sequence, waiting for player input, game over, etc.)?
+
+Suggested_Commands:
+List 1-3 candidate actions, e.g. click(color="red"), wait(duration=1).
+
+Image_Description:
+...
+
+Game_State:
+...
+
+Suggested_Commands:
+...

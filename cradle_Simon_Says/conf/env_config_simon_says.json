@@ -1,0 +1,75 @@
+{
+    "env_name": "Simon Says",
+    "env_window_name_pattern": "Simon Says",
+    "sub_path": "simon_says",
+    "env_short_name": "simon_says",
+    "is_game": true,
+    "shared_runner": "simon_says",
+    "skill_registry_name": "cradle.environment.simon_says.skill_registry.SimonSaysSkillRegistry",
+    "ui_control_name": "cradle.environment.simon_says.ui_control.SimonSaysUIControl",
+    "task_description_list": [
+        {
+            "id": 1,
+            "task_description": "Play Simon Says and complete as many levels as possible. Listen to the color sequences and replicate them by clicking the colored buttons.",
+            "sub_task_description_list": [
+                "Start the game",
+                "Watch the first color sequence",
+                "Click the correct colored buttons to match the sequence",
+                "Progress to level 2 and beyond",
+                "Complete as many levels as possible"
+            ]
+        },
+        {
+            "id": 2,
+            "task_description": "Achieve level 5 or higher in Simon Says",
+            "sub_task_description_list": [
+                "Start the game",
+                "Carefully memorize each color sequence",
+                "Execute sequences perfectly to advance levels",
+                "Reach level 5"
+            ]
+        }
+    ],
+    "skill_configs": {
+        "skill_mode": "Basic",
+        "skill_from_default": false,
+        "skill_names_basic": [
+            "click"
+        ],
+        "skill_names_allow": [],
+        "skill_names_deny": [],
+        "skill_names_others": {},
+        "skill_num": 1,
+        "skill_retrieval": false,
+        "registered_skills": null
+    },
+    "planner_params": {
+        "__check_list__": [
+            "action_planning",
+            "information_gathering",
+            "success_detection"
+        ],
+        "prompt_paths": {
+            "inputs": {
+                "action_planning": "./res/simon_says/prompts/inputs/action_planning.json",
+                "information_gathering": "./res/simon_says/prompts/inputs/information_gathering.json",
+                "information_text_gathering": "./res/simon_says/prompts/inputs/information_text_gathering.json",
+                "self_reflection": "./res/simon_says/prompts/inputs/self_reflection.json",
+                "task_inference": "./res/simon_says/prompts/inputs/task_inference.json",
+                "success_detection": "./res/simon_says/prompts/inputs/success_detection.json"
+            },
+            "templates": {
+                "action_planning": "./res/simon_says/prompts/templates/action_planning.prompt",
+                "information_gathering": "./res/simon_says/prompts/templates/information_gathering.prompt",
+                "information_text_gathering": "./res/simon_says/prompts/templates/information_text_gathering.prompt",
+                "self_reflection": "./res/simon_says/prompts/templates/self_reflection.prompt",
+                "task_inference": "./res/simon_says/prompts/templates/task_inference.prompt",
+                "success_detection": "./res/simon_says/prompts/templates/success_detection.prompt"
+            }
+        }
+    },
+    "provider_configs": {
+        "use_sam": false,
+        "use_gd": false
+    }
+}

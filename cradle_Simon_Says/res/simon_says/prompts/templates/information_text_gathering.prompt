@@ -1,0 +1,8 @@
+Extract any visible text from the Simon Says screenshot (level number, status messages, sequence indicator).
+
+Task: <$task_description$>
+
+<$image_introduction$>
+
+Text_Found:
+[List the visible text content]

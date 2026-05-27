@@ -1,0 +1,19 @@
+You are tracking progress in Simon Says.
+
+Task: <$task_description$>
+Current subtask: <$subtask_description$>
+Last action: <$previous_action$>
+Previous reasoning: <$previous_reasoning$>
+Self reflection: <$self_reflection_reasoning$>
+History: <$previous_summarization$>
+
+<$image_introduction$>
+
+Subtask_Description:
+[What the agent should focus on next, e.g. "watch sequence" or "replay sequence step 3"]
+
+Subtask_Reasoning:
+[1 sentence why]
+
+History_Summary:
+[1-2 sentences summarising progress so far]

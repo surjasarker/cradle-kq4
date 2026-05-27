@@ -1,0 +1,13 @@
+Reflect on the most recent Simon Says action.
+
+Task: <$task_description$>
+Last action: <$previous_action_call$>
+Reason given: <$key_reason_of_last_action$>
+Execution error (if any): <$executing_action_error$>
+
+<$image_introduction$>
+
+Compare the two screenshots. Did the action have the intended effect (correct color clicked, sequence progressing)?
+
+Self_Reflection_Reasoning:
+[1-2 sentences]

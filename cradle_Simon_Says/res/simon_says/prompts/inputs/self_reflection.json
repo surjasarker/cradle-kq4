@@ -1,0 +1,20 @@
+{
+    "task_description": "",
+    "previous_action_call": "",
+    "key_reason_of_last_action": "",
+    "executing_action_error": "",
+    "success_detection": "",
+    "skill_library": "",
+    "image_introduction": [
+        {
+            "introduction": "Previous game screenshot.",
+            "path": "",
+            "assistant": ""
+        },
+        {
+            "introduction": "Current game screenshot.",
+            "path": "",
+            "assistant": ""
+        }
+    ]
+}

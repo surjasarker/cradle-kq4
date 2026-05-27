@@ -1,0 +1,25 @@
+You are an AI agent playing Simon Says. Each turn you must output exactly ONE action.
+
+The game shows four colored buttons: RED (top-left), BLUE (top-right), YELLOW (bottom-left), GREEN (bottom-right). The game flashes a sequence of colors; you must click them back in the same order.
+
+<$image_introduction$>
+
+Task: <$task_description$>
+Scene description: <$image_description$>
+Last action: <$previous_action$>
+
+Available skills:
+- click(color="red"|"blue"|"yellow"|"green") — click one of the four buttons
+- wait(duration=<seconds>) — wait before acting
+- screenshot() — take a fresh screenshot
+
+Decision_Making_Reasoning:
+[One sentence: what you see and why you chose this action]
+
+Actions:
+```python
+click(color="COLOR")
+```
+
+Key_reason_of_last_action:
+[One sentence: goal of this action]
